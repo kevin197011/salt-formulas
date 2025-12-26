@@ -12,6 +12,8 @@ middleware:
     - middleware_nginx
   'G@roles:cache or G@roles:db':
     - middleware_redis
+  'G@roles:db':
+    - middleware_mysql
 
 runtime:
   'G@roles:java':

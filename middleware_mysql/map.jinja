@@ -1,0 +1,46 @@
+{# MySQL 配置参数映射 #}
+{# 支持通过 Pillar 覆盖默认值 #}
+
+{% set mysql = salt['grains.filter_by']({
+    'Debian': {
+        'server_pkg': 'mysql-server',
+        'client_pkg': 'mysql-client',
+        'service': 'mysql',
+        'config_dir': '/etc/mysql',
+        'config_file': '/etc/mysql/mysql.conf.d/mysqld.cnf',
+        'data_dir': '/var/lib/mysql',
+        'socket': '/var/run/mysqld/mysqld.sock',
+        'user': 'mysql',
+        'group': 'mysql',
+    },
+    'RedHat': {
+        'server_pkg': 'mysql-server',
+        'client_pkg': 'mysql',
+        'service': 'mysqld',
+        'config_dir': '/etc',
+        'config_file': '/etc/my.cnf',
+        'data_dir': '/var/lib/mysql',
+        'socket': '/var/lib/mysql/mysql.sock',
+        'user': 'mysql',
+        'group': 'mysql',
+    },
+}, grain='os_family', merge=salt['pillar.get']('mysql:lookup', {})) %}
+
+{# 可配置参数 - 通过 Pillar 传入 #}
+{% set config = salt['pillar.get']('mysql:config', {}) %}
+
+{% set settings = {
+    'port': config.get('port', 3306),
+    'bind_address': config.get('bind_address', '127.0.0.1'),
+    'max_connections': config.get('max_connections', 151),
+    'max_allowed_packet': config.get('max_allowed_packet', '64M'),
+    'innodb_buffer_pool_size': config.get('innodb_buffer_pool_size', '256M'),
+    'innodb_log_file_size': config.get('innodb_log_file_size', '64M'),
+    'innodb_flush_log_at_trx_commit': config.get('innodb_flush_log_at_trx_commit', 1),
+    'character_set_server': config.get('character_set_server', 'utf8mb4'),
+    'collation_server': config.get('collation_server', 'utf8mb4_unicode_ci'),
+    'slow_query_log': config.get('slow_query_log', True),
+    'slow_query_log_file': config.get('slow_query_log_file', '/var/log/mysql/slow.log'),
+    'long_query_time': config.get('long_query_time', 2),
+    'root_password': config.get('root_password', ''),
+} %}

@@ -1,0 +1,41 @@
+# MySQL Configuration File
+# Managed by Salt - DO NOT EDIT MANUALLY
+
+[mysqld]
+# Basic Settings
+user            = {{ mysql.user }}
+datadir         = {{ mysql.data_dir }}
+socket          = {{ mysql.socket }}
+port            = {{ settings.port }}
+bind-address    = {{ settings.bind_address }}
+
+# Character Set
+character-set-server  = {{ settings.character_set_server }}
+collation-server      = {{ settings.collation_server }}
+
+# Connection Settings
+max_connections       = {{ settings.max_connections }}
+max_allowed_packet    = {{ settings.max_allowed_packet }}
+
+# InnoDB Settings
+innodb_buffer_pool_size       = {{ settings.innodb_buffer_pool_size }}
+innodb_log_file_size          = {{ settings.innodb_log_file_size }}
+innodb_flush_log_at_trx_commit = {{ settings.innodb_flush_log_at_trx_commit }}
+
+# Logging
+{% if settings.slow_query_log %}
+slow_query_log          = 1
+slow_query_log_file     = {{ settings.slow_query_log_file }}
+long_query_time         = {{ settings.long_query_time }}
+{% endif %}
+
+# Error Log
+log_error = /var/log/mysql/error.log
+
+[client]
+port            = {{ settings.port }}
+socket          = {{ mysql.socket }}
+default-character-set = {{ settings.character_set_server }}
+
+[mysql]
+default-character-set = {{ settings.character_set_server }}
