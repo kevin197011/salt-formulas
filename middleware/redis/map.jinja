@@ -1,0 +1,8 @@
+{% set redis = salt['pillar.get']('redis', {}) %}
+
+{% set port = redis.get('port', 6379) %}
+{% set bind = redis.get('bind', '127.0.0.1') %}
+{% set max_memory = redis.get('max_memory', '256mb') %}
+{% set max_memory_policy = redis.get('max_memory_policy', 'allkeys-lru') %}
+{% set appendonly = redis.get('appendonly', 'yes') %}
+{% set requirepass = redis.get('requirepass') %}

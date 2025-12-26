@@ -1,0 +1,7 @@
+{% set nginx = salt['pillar.get']('nginx', {}) %}
+
+{% set worker_processes = nginx.get('worker_processes', salt['grains.get']('num_cpus', 4)) %}
+{% set worker_connections = nginx.get('worker_connections', 1024) %}
+{% set listen_port = nginx.get('listen_port', 80) %}
+{% set server_name = nginx.get('server_name', salt['grains.get']('fqdn', 'localhost')) %}
+{% set root_dir = nginx.get('root_dir', '/usr/share/nginx/html') %}

@@ -1,0 +1,17 @@
+[Unit]
+Description={{ pillar.get('web_app.name', 'myapp') }} Web Application
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User={{ pillar.get('web_app.user', pillar.get('web_app.name', 'myapp')) }}
+Group={{ pillar.get('web_app.group', pillar.get('web_app.user', pillar.get('web_app.name', 'myapp'))) }}
+WorkingDirectory={{ pillar.get('web_app.root', '/opt/' + pillar.get('web_app.name', 'myapp')) }}
+ExecStart={{ pillar.get('web_app.exec_start', '/usr/bin/node app/index.js') }}
+Restart=always
+RestartSec=10
+Environment=NODE_ENV={{ pillar.get('web_app.environment', 'production') }}
+
+[Install]
+WantedBy=multi-user.target

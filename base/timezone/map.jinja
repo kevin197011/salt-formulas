@@ -1,0 +1,3 @@
+{% set timezone = salt['pillar.get']('timezone', {}) %}
+{% set timezone_name = timezone.get('name', 'Asia/Shanghai') %}
+{% set timezone_utc = timezone.get('utc', True) %}
