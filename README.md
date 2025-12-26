@@ -6,50 +6,24 @@
 
 ```
 salt-formulas/
-├── base_*/               # 基础能力层
-│   ├── base_motd/        # 系统欢迎信息
-│   ├── base_sysctl/      # 内核参数配置
-│   ├── base_timezone/    # 系统时区设置
-│   └── base_users/       # 用户管理
-├── middleware_*/         # 中间件层
-│   ├── middleware_mysql/ # MySQL数据库服务器
-│   ├── middleware_nginx/ # Nginx Web服务器
-│   └── middleware_redis/ # Redis缓存服务器
-├── runtime_*/            # 运行时层
-│   ├── runtime_java/     # Java运行环境
-│   └── runtime_nodejs/   # Node.js运行环境
-├── app_*/                # 应用层
-│   └── app_web_app/      # Web应用部署
-├── scripts/              # 工具脚本
-│   └── flatten_structure.rb  # 目录结构处理脚本
-├── deploy.sh             # 部署脚本
-├── push.rb               # 推送脚本
-├── Rakefile              # Rake任务定义
-└── top.sls               # Formula执行拓扑
+├── base/                 # 基础能力层
+│   ├── timezone/        # 系统时区设置
+│   ├── users/           # 用户管理
+│   └── sysctl/          # 内核参数配置
+├── middleware/          # 中间件层
+│   ├── nginx/           # Nginx Web服务器
+│   └── redis/           # Redis缓存服务器
+├── runtime/             # 运行时层
+│   ├── java/            # Java运行环境
+│   └── nodejs/          # Node.js运行环境
+├── app/                 # 应用层
+│   └── web-app/         # Web应用部署
+└── top.sls              # Formula执行拓扑
 ```
 
 ## Formula使用说明
 
-### 1. 基础层 (base_*)
-
-#### motd
-设置系统欢迎信息。
-
-**Pillar配置**:
-```yaml
-motd:
-  message: "Welcome to this server"  # 欢迎信息内容
-```
-
-#### sysctl
-配置内核参数。
-
-**Pillar配置**:
-```yaml
-sysctl:
-  net.core.somaxconn: 65535
-  vm.max_map_count: 262144
-```
+### 1. 基础层 (base)
 
 #### timezone
 设置系统时区。
@@ -77,22 +51,17 @@ users:
     password: hashed_password
 ```
 
-### 2. 中间件层 (middleware_*)
-
-#### mysql
-部署和配置MySQL数据库服务器。
+#### sysctl
+配置内核参数。
 
 **Pillar配置**:
 ```yaml
-mysql:
-  root_password: changeme     # root用户密码
-  database: myapp             # 默认数据库名
-  user: myapp                 # 默认用户名
-  password: changeme          # 默认用户密码
-  host: localhost             # 绑定地址
-  port: 3306                  # 监听端口
-  max_connections: 100        # 最大连接数
+sysctl:
+  net.core.somaxconn: 65535
+  vm.max_map_count: 262144
 ```
+
+### 2. 中间件层 (middleware)
 
 #### nginx
 部署和配置Nginx Web服务器。
@@ -121,7 +90,7 @@ redis:
   requirepass: your_password
 ```
 
-### 3. 运行时层 (runtime_*)
+### 3. 运行时层 (runtime)
 
 #### java
 安装Java运行环境。
@@ -142,7 +111,7 @@ nodejs:
   npm_version: npm    # NPM包名
 ```
 
-### 4. 应用层 (app_*)
+### 4. 应用层 (app)
 
 #### web-app
 部署Web应用。
@@ -161,7 +130,7 @@ web_app:
   exec_start: /usr/bin/node app/index.js
   database:
     host: localhost
-    port: 3306
+    port: 5432
     name: myapp
     user: myapp
     password: changeme
@@ -199,25 +168,15 @@ web_app:
 ### 标准Formula结构
 
 ```
-category_your-formula/
+your-formula/
 ├── init.sls          # 入口文件
-├── install.sls       # 安装逻辑 (可选)
-├── config.sls        # 配置管理 (可选)
-├── service.sls       # 服务控制 (可选)
-├── deploy.sls        # 部署逻辑 (可选)
-├── env.sls           # 环境变量 (可选)
-├── map.jinja         # 参数映射 (可选)
-├── files/            # 配置文件模板 (可选)
-│   └── config.j2
-└── README.md         # 说明文档 (可选)
+├── install.sls       # 安装逻辑
+├── config.sls        # 配置管理
+├── service.sls       # 服务控制
+├── map.jinja         # 参数映射
+└── files/            # 配置文件模板
+    └── config.j2
 ```
-
-### 命名约定
-
-- **基础层**: `base_{功能名}` (如: base_timezone)
-- **中间件层**: `middleware_{服务名}` (如: middleware_nginx)
-- **运行时层**: `runtime_{环境名}` (如: runtime_java)
-- **应用层**: `app_{应用名}` (如: app_web_app)
 
 ### 最佳实践
 
