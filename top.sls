@@ -3,22 +3,22 @@
 
 base:
   '*':
-    - base.timezone
-    - base.users
-    - base.sysctl
+    - base_timezone
+    - base_users
+    - base_sysctl
 
 middleware:
   'G@roles:web or G@roles:app':
-    - middleware.nginx
+    - middleware_nginx
   'G@roles:cache or G@roles:db':
-    - middleware.redis
+    - middleware_redis
 
 runtime:
   'G@roles:java':
-    - runtime.java
+    - runtime_java
   'G@roles:nodejs or G@roles:web':
-    - runtime.nodejs
+    - runtime_nodejs
 
 app:
   'G@roles:web':
-    - app.web-app
+    - app_web_app
